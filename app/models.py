@@ -25,7 +25,12 @@ class User:
         return result.deleted_count > 0
 
     @staticmethod
-    def get_all_users():
+    def get_all_users(page=1, page_size=20):
+        if page < 1:
+            page = 1
+        if page_size < 1:
+            page_size = 20
+
         pipeline = [
             {
                 "$lookup": {
@@ -44,12 +49,22 @@ class User:
                 "$project": {
                     "scores": 0  # Exclude the 'scores' array from the results
                 }
+            },
+            {
+                "$sort": {"score": -1}  # Sort users by score in descending order
+            },
+            {
+                "$skip": (page - 1) * page_size
+            },
+            {
+                "$limit": page_size
             }
         ]
 
         users = list(mongo.db.users.aggregate(pipeline))
         for user in users:
             user["_id"] = str(user["_id"])  # Convert ObjectId to string
+
         return users
     
 
@@ -93,3 +108,42 @@ class Score:
 
         # Return the score data
         return score_data
+    
+    @staticmethod
+    def calculate_winner():
+        pipeline = [
+            {"$sort": {"score": -1}},  # Sort by score in descending order
+            {"$limit": 2},  # Limit to the top document
+            {"$project": {"user_id": 1, "score": 1}}  # Project only necessary fields
+        ]
+
+        highest_score_users = list(mongo.db.scores.aggregate(pipeline))
+
+        # Check if any users have a score
+        if highest_score_users:
+
+            # Get the highest score
+            highest_score = highest_score_users[0]["score"]
+            
+            # Filter users with the highest score
+            top_users = [user for user in highest_score_users if user["score"] == highest_score]
+
+            if len(top_users) == 1:
+
+                winner = {
+                    "user_id": str(top_users[0]["user_id"]),
+                    "score": top_users[0]["score"],
+                    "created_at": datetime.datetime.utcnow()
+                }
+
+                # Store the winner in the winners collection
+                winners_collection = mongo.db.winners
+                result = winners_collection.insert_one(winner)
+                winner["_id"] = str(result.inserted_id)
+                return winner
+            else:
+                # If there's a tie, return a message indicating no winner
+                return None
+        else:
+            # No users found
+            return None

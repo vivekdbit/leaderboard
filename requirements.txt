@@ -1,3 +1,7 @@
 Flask
 Flask-PyMongo
 Flask-HTTPAuth
+boto3
+Flask-CORS
+Faker
+python-dotenv
