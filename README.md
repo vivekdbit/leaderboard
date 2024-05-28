@@ -56,23 +56,4 @@ Tech Stack Used:
     | 4  | POST   | /api/v1/users/score     | Add scores                      |
     | 5  | GET    | /api/v1/users/aggregate | Get users grouped by score      |
 
-7. API contracts
-
-    #### 1. Add Fake User 
-
-    <summary><code>POST</code> <code>/api/v1/users</code></summary>
-
-    ##### Parameters
-
-    > | name      |  type     | data type               | description                                                           |
-    > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
-    > | None      |  -        | -                       | Adds fake user to database                                            |
-
-
-    ##### Responses
-
-    > | http code     | content-type                      | response                                                            |
-    > |---------------|-----------------------------------|---------------------------------------------------------------------|
-    > | `201`         | `application/json`                | `{"data"{}, "message":"User created successfully","request-identifier": ""}`                                |
-    > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
-        
+7. API contracts: https://documenter.getpostman.com/view/30759648/2sA3QsAs2E#0b82d441-98f7-4a62-ae85-7ad7d10055f3
