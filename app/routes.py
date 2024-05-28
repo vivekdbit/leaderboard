@@ -7,7 +7,7 @@ import uuid
 request_identifier = str(uuid.uuid4())
 main = Blueprint('main', __name__)
 
-@main.route('/users', methods=['POST'])
+@main.route('/api/v1/users', methods=['POST'])
 @auth.login_required
 def add_user():
     try:
@@ -28,7 +28,7 @@ def add_user():
         }), 500
 
 
-@main.route('/users/<user_id>', methods=['DELETE'])
+@main.route('/api/v1/users/<user_id>', methods=['DELETE'])
 @auth.login_required
 def delete_user(user_id):
     try:
@@ -48,7 +48,7 @@ def delete_user(user_id):
         }), 500
 
 
-@main.route('/users', methods=['GET'])
+@main.route('/api/v1/users', methods=['GET'])
 @auth.login_required
 def get_users():
     try:
@@ -71,7 +71,7 @@ def get_users():
         }), 500
 
 
-@main.route('/users/score', methods=['POST'])
+@main.route('/api/v1/users/score', methods=['POST'])
 @auth.login_required
 def upsert_score():
     try:
@@ -96,7 +96,7 @@ def upsert_score():
         }), 500
 
 
-@main.route('/users/aggregate', methods=['GET'])
+@main.route('/api/v1/users/aggregate', methods=['GET'])
 @auth.login_required
 def get_users_grouped_by_score():
     try:
@@ -117,7 +117,7 @@ def get_users_grouped_by_score():
         }), 500
 
 
-@main.route('/users/calculate_winner', methods=['GET'])
+@main.route('/api/v1/users/calculate_winner', methods=['GET'])
 @auth.login_required
 def calculate_winner():
     winner = Score.calculate_winner()
