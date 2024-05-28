@@ -1,10 +1,11 @@
 from flask_httpauth import HTTPBasicAuth
+from app.config import Config
 
 auth = HTTPBasicAuth()
 
-# In-memory user store for basic authentication
+#basic authentication
 users = {
-    "admin": "password"
+    Config.API_AUTH_USERNAME: Config.API_AUTH_PASSWORD
 }
 
 @auth.verify_password

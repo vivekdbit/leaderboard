@@ -1,14 +1,8 @@
 from flask import Blueprint, request, jsonify
-from app.models import User, Score
+from app.users_models import User
+from app.scores_models import Score
 from app.auth import auth
-from dotenv import load_dotenv
 import uuid
-import boto3
-import json
-import os
-import datetime
-
-load_dotenv()
 
 request_identifier = str(uuid.uuid4())
 main = Blueprint('main', __name__)
@@ -16,14 +10,22 @@ main = Blueprint('main', __name__)
 @main.route('/users', methods=['POST'])
 @auth.login_required
 def add_user():
-    data = request.json
-    user = User.create_user()
-    
-    return jsonify({
-        "request-identifier" : request_identifier,
-        "message" : "User created successfully",
-        "data" : user
-    }), 201
+    try:
+        user = User.create_user()
+        return jsonify({
+            "request-identifier": request_identifier,
+            "message": "User created successfully",
+            "data": user
+        }), 201
+    except Exception as e:
+        # Log the error
+        print(f"An error occurred while adding a user: {e}")
+        # Return an error response
+        return jsonify({
+            "request-identifier": request_identifier,
+            "message": "An error occurred while processing the request.",
+            "data": None
+        }), 500
 
 
 @main.route('/users/<user_id>', methods=['DELETE'])
@@ -53,49 +55,29 @@ def get_users():
 @main.route('/users/score', methods=['POST'])
 @auth.login_required
 def upsert_score():
-    request_identifier = str(uuid.uuid4())
     data = request.json
     if not data or not all(k in data for k in ("user_id", "score")):
-        return jsonify({
-            "request-identifier" : request_identifier,
-            "message" : "Invalid data",
-            "data" : None
-        }), 400
+        return jsonify({"error": "Invalid data"}), 400
 
-    # Initialize Boto3 client for Kinesis
-    kinesis_client = boto3.client(
-        'kinesis',
-        aws_access_key_id=os.getenv('AWS_ACCESS_KEY_ID'),
-        aws_secret_access_key=os.getenv('AWS_SECRET_ACCESS_KEY'),
-        region_name=os.getenv('AWS_REGION')
-    )
+    score = Score.upsert_score(data["user_id"], data["score"])
+    request_identifier = str(uuid.uuid4())
+    return jsonify({
+        "request-identifier" : request_identifier,
+        "message" : None,
+        "data" : score
+    }), 200
 
-    # Put record to Kinesis stream
-    try:
-        # Kinesis payload
-        kinesis_data = {
-            "request_identifier": request_identifier,
-            "user_id": data["user_id"],
-            "score": data["score"],
-            "event_time": datetime.datetime.utcnow().isoformat()
-        }
-        kinesis_client.put_record(
-            StreamName=os.environ.get('KINESIS_STREAM_NAME'),
-            Data=json.dumps(kinesis_data),
-            PartitionKey=data["user_id"]
-        )
-        return jsonify({
-            "request-identifier": request_identifier,
-            "message": None,
-            "data": None
-        }), 200
-    except Exception as e:
-        print(f"Failed to send data to Kinesis: {str(e)}")
-        return jsonify({
-            "request-identifier": request_identifier, 
-            "message": "Failed to send data to Kinesis",
-            "data": None
-        }), 500
+
+@main.route('/users/aggregate', methods=['GET'])
+@auth.login_required
+def get_users_grouped_by_score():
+    request_identifier = str(uuid.uuid4())
+    users = User.get_users_grouped_by_score()
+    return jsonify({
+        "request-identifier": request_identifier,
+        "message": None,
+        "data": users
+    }), 200
 
 
 @main.route('/users/calculate_winner', methods=['GET'])

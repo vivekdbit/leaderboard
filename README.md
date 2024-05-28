@@ -48,14 +48,31 @@ Tech Stack Used:
     Your Flask API should now be running at http://127.0.0.1:5000
 
 6. API Endpoints
-    
-    | Sr | API                         | Description   |
-    |----|-----------------------------|---------------|
-    | 1  | GET /api/users              | Get all users |
-    | 2  | DELETE /api/users/{user_id} | Delete user   |
-    | 3  | POST /api/users             | Add user      |
-    | 4  | POST /api/users/score       | Add score     |
+    | ID | METHOD | API                     | Description                     |
+    | -- | ------ | ----------------------- | ------------------------------- |
+    | 1  | POST   | /api/v1/users           | Add Fake User                   |
+    | 2  | DELETE | /api/v1/users/{user_id} | Delete User                     |
+    | 3  | GET    | /api/v1/users           | Get paginated users, Defulat 20 |
+    | 4  | POST   | /api/v1/users/score     | Add scores                      |
+    | 5  | GET    | /api/v1/users/aggregate | Get users grouped by score      |
 
-    TODO
-    add API contracts
-    
+7. API contracts
+
+    #### 1. Add Fake User 
+
+    <summary><code>POST</code> <code>/api/v1/users</code></summary>
+
+    ##### Parameters
+
+    > | name      |  type     | data type               | description                                                           |
+    > |-----------|-----------|-------------------------|-----------------------------------------------------------------------|
+    > | None      |  -        | -                       | Adds fake user to database                                            |
+
+
+    ##### Responses
+
+    > | http code     | content-type                      | response                                                            |
+    > |---------------|-----------------------------------|---------------------------------------------------------------------|
+    > | `201`         | `application/json`                | `{"data"{}, "message":"User created successfully","request-identifier": ""}`                                |
+    > | `400`         | `application/json`                | `{"code":"400","message":"Bad Request"}`                            |
+        
