@@ -11,37 +11,26 @@ class Score:
             raise ValueError("Invalid user_id")
 
         user_id_obj = ObjectId(user_id)
-
-        # Find the existing score document for the user
-        existing_score = mongo.db.scores.find_one({"user_id": user_id_obj})
-
-        if existing_score:
-            # User exists, update the score
-            new_score = existing_score["score"] + score
-            mongo.db.scores.update_one(
-                {"user_id": user_id_obj},
-                {"$set": {"score": new_score, "updated_at": datetime.datetime.utcnow()}}
-            )
-            existing_score["score"] = new_score
-            existing_score["updated_at"] = datetime.datetime.utcnow()
-            score_data = existing_score
-        else:
-            # User does not exist, create a new score document
-            score_data = {
-                "user_id": user_id_obj,
-                "score": score,
-                "created_at": datetime.datetime.utcnow(),
-                "updated_at": datetime.datetime.utcnow()
-            }
-            result = mongo.db.scores.insert_one(score_data)
-            score_data["_id"] = str(result.inserted_id)
+        
+        # Use findOneAndUpdate for atomic update and retrieval
+        current_time = datetime.datetime.utcnow()
+        updated_score = mongo.db.scores.find_one_and_update(
+            {"user_id": user_id_obj},
+            {
+                "$inc": {"score": score},
+                "$set": {"updated_at": current_time},
+                "$setOnInsert": {"created_at": current_time}
+            },
+            upsert=True,
+            return_document=True  # Return the updated document
+        )
 
         # Convert ObjectId to string for the response
-        score_data["_id"] = str(score_data["_id"])
-        score_data["user_id"] = str(score_data["user_id"])
+        updated_score["_id"] = str(updated_score["_id"])
+        updated_score["user_id"] = str(updated_score["user_id"])
 
         # Return the score data
-        return score_data
+        return updated_score
     
     @staticmethod
     def calculate_winner():
