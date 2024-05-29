@@ -7,6 +7,7 @@ import uuid
 request_identifier = str(uuid.uuid4())
 main = Blueprint('main', __name__)
 
+
 @main.route('/api/v1/users', methods=['POST'])
 @auth.login_required
 def add_user():

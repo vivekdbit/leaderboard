@@ -67,3 +67,8 @@ Tech Stack Used:
     | 5  | GET    | /api/v1/users/aggregate | Get users grouped by score      |
 
 7. API contracts: https://documenter.getpostman.com/view/30759648/2sA3QsAs2E#0b82d441-98f7-4a62-ae85-7ad7d10055f3
+
+
+## Out of Scope
+1. Logger
+2. Time Zone
