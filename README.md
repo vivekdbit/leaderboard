@@ -1,5 +1,4 @@
 # Leaderboard Assignment Setup and Run Instructions
-TODO add details
 
 ## Prerequisites
 Tech Stack Used:
@@ -14,7 +13,7 @@ Tech Stack Used:
     Clone the repository from your version control system:
     ```
     git clone https://github.com/vivekdbit/leaderboard.git
-    cd your-flask-api-project
+    cd leaderboard
     ```
 2. Create a Virtual Environment 
     
@@ -46,6 +45,17 @@ Tech Stack Used:
     flask run
     ```
     Your Flask API should now be running at http://127.0.0.1:5000
+
+6. Running Tests with pytest
+    
+    Execute the pytest command to run all tests in your project.
+   ```
+   pytest
+    ```
+    Alternatively, to run tests in a specific file:
+    ```
+    pytest test/test_users.py
+    ```
 
 6. API Endpoints
     | ID | METHOD | API                     | Description                     |
