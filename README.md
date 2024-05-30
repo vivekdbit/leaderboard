@@ -72,3 +72,9 @@ Tech Stack Used:
 ## Out of Scope
 1. Logger
 2. Time Zone
+
+## Optimisations
+1. Instead of hard delete we can soft delete the entry. Based on the use-case.
+2. Get all users on leaderboard returns with pagination. 2 approaches
+    2.1 Limit based
+    2.2 Id based -> ID indexed and ordered by epoch time on LHS
