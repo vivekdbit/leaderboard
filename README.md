@@ -75,7 +75,7 @@ Tech Stack Used:
 
 ## Optimisations
 1. Instead of hard delete we can soft delete the entry. Based on the use-case.
-2. Get all users on leaderboard returns with pagination. 2 approaches
+2. Get all users on leaderboard returns with pagination. 2 approaches 
    
     2.1 Limit based
     
