@@ -35,7 +35,7 @@ env:
   ECR_REPOSITORY: leaderboard-flask           # set this to your Amazon ECR repository name
   ECS_SERVICE: flask-api                 # set this to your Amazon ECS service name
   ECS_CLUSTER: LeaderboardCluster                 # set this to your Amazon ECS cluster name
-  ECS_TASK_DEFINITION: leaderboard-td.json # set this to the path to your Amazon ECS task definition
+  ECS_TASK_DEFINITION: ./scripts/leaderboard-td-revision1.json # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
   CONTAINER_NAME: flask_c           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
