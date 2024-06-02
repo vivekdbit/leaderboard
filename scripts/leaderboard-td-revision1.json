@@ -1,5 +1,5 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:089852635305:task-definition/prodLb-TD:1",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:089852635305:task-definition/ecs-td:1",
     "containerDefinitions": [
         {
             "name": "flask-api",
@@ -16,7 +16,12 @@
             ],
             "essential": true,
             "environment": [],
-            "environmentFiles": [],
+            "environmentFiles": [
+                {
+                    "value": "arn:aws:s3:::my-leaderboard-env/.env",
+                    "type": "s3"
+                }
+            ],
             "mountPoints": [],
             "volumesFrom": [],
             "ulimits": [],
@@ -24,7 +29,7 @@
                 "logDriver": "awslogs",
                 "options": {
                     "awslogs-create-group": "true",
-                    "awslogs-group": "/ecs/prodLb-TD",
+                    "awslogs-group": "/ecs/ecs-td",
                     "awslogs-region": "us-east-1",
                     "awslogs-stream-prefix": "ecs"
                 },
@@ -33,7 +38,7 @@
             "systemControls": []
         }
     ],
-    "family": "prodLb-TD",
+    "family": "ecs-td",
     "executionRoleArn": "arn:aws:iam::089852635305:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
     "revision": 1,
@@ -51,6 +56,9 @@
         },
         {
             "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+        },
+        {
+            "name": "ecs.capability.env-files.s3"
         },
         {
             "name": "ecs.capability.execution-role-ecr-pull"
@@ -73,13 +81,13 @@
     "requiresCompatibilities": [
         "FARGATE"
     ],
-    "cpu": "1024",
-    "memory": "3072",
+    "cpu": "256",
+    "memory": "512",
     "runtimePlatform": {
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-06-02T00:31:16.971Z",
+    "registeredAt": "2024-06-02T01:26:40.516Z",
     "registeredBy": "arn:aws:iam::089852635305:root",
     "tags": []
 }
