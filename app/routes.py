@@ -132,3 +132,10 @@ def calculate_winner():
         }), 200
     else:
         return jsonify({"message": "No users found."}), 404
+    
+
+@main.route('/', methods=['GET'])
+def health_check():
+    return jsonify({
+        "message": "Health Check"
+    }), 200
